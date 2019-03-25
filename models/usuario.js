@@ -25,7 +25,7 @@
 
     password : {
       type : String,
-      required : [true, 'La contraseña es necesaria'],
+      required : [this.google === false, 'La contraseña es necesaria'],
     },
 
     img : {
@@ -36,9 +36,14 @@
     role : {
       type : String,
       required : true,
-      defaul : 'USER_ROLE',
+      default : 'USER_ROLE',
       enum : roleValidos // utilizar roles validos
     },
+
+    google : {
+      type : Boolean,
+      defaul : false
+    }
 
   });
 

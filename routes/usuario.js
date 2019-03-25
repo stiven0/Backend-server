@@ -14,7 +14,13 @@
   // ruta para obtener todos los usuarios
   app.get('/', (req, res) => {
 
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
+
     Usuario.find({}, 'nombre email img role')
+    .skip(desde)
+    .limit(5)
     .exec((error, usuariosEncontrados) => {
 
       if(error) {
@@ -32,10 +38,14 @@
           });
       }
 
-      res.status(200).json({
-        ok : true,
-        usuarios : usuariosEncontrados
+      Usuario.countDocuments({}, (error, conteo) => {
+        res.status(200).json({
+          ok : true,
+          usuarios : usuariosEncontrados,
+          totalUsuarios : conteo
+        });
       });
+
 
     });
 

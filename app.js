@@ -16,6 +16,11 @@
   let appRoutes = require('./routes/app');
   let appRoutesUser = require('./routes/usuario');
   let appLogin = require('./routes/login');
+  let appHospital = require('./routes/hospital');
+  let appMedico = require('./routes/medico');
+  let appBusqueda = require('./routes/busqueda');
+  let appUpload = require('./routes/upload');
+  let appImagenes = require('./routes/retornar-imagenes');
 
   // conexion BD
   mongoose.connect('mongodb://localhost:27017/hospitalDB', { useNewUrlParser:true, useCreateIndex:true})
@@ -25,9 +30,19 @@
           })
           .catch(error => console.log(error));
 
+  // server index config
+  // let serveIndex = require('serve-index');
+  // app.use(express.static(__dirname + '/'));
+  // app.use('/uploads', serveIndex(__dirname + '/uploads'));
+
   // Rutas
   app.use('/usuario', appRoutesUser);
   app.use('/login', appLogin);
+  app.use('/hospital', appHospital);
+  app.use('/medico', appMedico);
+  app.use('/busqueda', appBusqueda);
+  app.use('/upload', appUpload);
+  app.use('/img', appImagenes);
   app.use('/', appRoutes);
 
   // escuchar peticiones

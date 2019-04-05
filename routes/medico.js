@@ -5,7 +5,7 @@
   let Medico = require('../models/medico');
 
   // middleware-token
-  let middlewareToken = require('../middlewares/token');
+  let {middlewareToken} = require('../middlewares/token');
 
   app.get('/', (req, res) => {
 
@@ -46,6 +46,39 @@
     });
   });
 
+  // retornar un medico
+  app.get('/:id', (req, res) => {
+    let id = req.params.id;
+
+    Medico.findById(id)
+    .populate('usuario', 'nombre email img')
+    .populate('hospital')
+    .exec((error, medicoEncontrado) => {
+
+      if(error){
+          return res.status(500).json({
+            ok: false,
+            error : 'Error en base de datos',
+            errors : error
+          });
+      }
+
+      if(!medicoEncontrado){
+          return res.status(404).json({
+            ok : false,
+            message : 'No existe este medico'
+          });
+      }
+
+      res.json({
+        ok : true,
+        medico : medicoEncontrado
+      });
+
+    });
+  });
+
+  // guardar un nuevo medico
   app.post('/', middlewareToken, (req, res) => {
 
     let body = req.body;
@@ -73,6 +106,7 @@
     });
   });
 
+  // actualizar un medico
   app.put('/:id', middlewareToken, (req, res) => {
 
     let medicoId = req.params.id;
@@ -117,6 +151,7 @@
     });
   });
 
+  // borrar un medico
   app.delete('/:id', middlewareToken, (req, res) => {
 
     let medicoId = req.params.id;

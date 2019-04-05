@@ -7,6 +7,15 @@
   // inicializar variables
   let app = express();
 
+  // CORS
+  app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Headers', 'Authorization, token, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+      res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+      next();
+  });
+
   // middlewares bodyParser
   // parse application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({extended:false}));
@@ -34,6 +43,7 @@
   // let serveIndex = require('serve-index');
   // app.use(express.static(__dirname + '/'));
   // app.use('/uploads', serveIndex(__dirname + '/uploads'));
+
 
   // Rutas
   app.use('/usuario', appRoutesUser);

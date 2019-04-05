@@ -6,7 +6,7 @@
   let Hospital = require('../models/hospital');
 
   // middleware token
-  let middlewareToken = require('../middlewares/token');
+  let {middlewareToken} = require('../middlewares/token');
 
   // retornar todos los hospitales
   app.get('/', (req, res) => {
@@ -15,7 +15,7 @@
     desde = Number(desde);
 
     Hospital.find({})
-    .populate('usuario', 'nombre email')
+    .populate('usuario', 'nombre img email')
     .skip(desde)
     .limit(5)
     .exec((error, hospitalesEncontrados)=> {
@@ -43,6 +43,37 @@
           total : conteo
         });
       });
+    });
+  });
+
+  // metodo para obtener un hospital de la base de datos
+  app.get('/:id', (req, res) => {
+    let id = req.params.id;
+
+    Hospital.findById(id)
+    .populate('usuario', 'nombre email img')
+    .exec((error, hospitalDB) => {
+
+      if(error) {
+          return res.status(500).json({
+            ok : false,
+            message : 'Error al buscar hospital',
+            errors : error
+          });
+      }
+
+      if(!hospitalDB){
+          return res.status(404).json({
+            ok : false,
+            message : 'El hospital no existe'
+          });
+      }
+
+      res.status(200).json({
+        ok : true,
+        hospital : hospitalDB
+      });
+
     });
   });
 

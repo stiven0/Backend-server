@@ -9,7 +9,7 @@
   let Usuario = require('../models/usuario');
 
   // middleware-token
-  let middlewareToken = require('../middlewares/token');
+  let {middlewareToken, verificaADMIN_ROLE, verificaUsuario} = require('../middlewares/token');
 
   // ruta para obtener todos los usuarios
   app.get('/', (req, res) => {
@@ -18,7 +18,7 @@
     desde = Number(desde);
 
 
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
     .skip(desde)
     .limit(5)
     .exec((error, usuariosEncontrados) => {
@@ -83,7 +83,7 @@
   });
 
   // actualizar un usuario
-  app.put('/:id', middlewareToken, (req, res) => {
+  app.put('/:id', [middlewareToken, verificaUsuario],  (req, res) => {
     let id = req.params.id;
     let body = req.body;
 
@@ -107,7 +107,7 @@
 
       // datos a actualizar
       usuarioEncontrado.nombre = body.nombre;
-      usuarioEncontrado.email = body.email;
+      // usuarioEncontrado.email = body.email;
       usuarioEncontrado.role = body.role;
 
       usuarioEncontrado.save((error, usuarioGuardado) => { // guardar los datos nuevos
@@ -129,7 +129,7 @@
   });
 
   // borrar un usuario
-  app.delete('/:usuarioId', middlewareToken, (req, res) => {
+  app.delete('/:usuarioId', [middlewareToken, verificaADMIN_ROLE], (req, res) => {
 
     let id = req.params.usuarioId;
 

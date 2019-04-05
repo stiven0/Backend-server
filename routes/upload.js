@@ -159,7 +159,7 @@
           return res.status(200).json({
                 ok : true,
                 message : 'Imagen subida existosamente',
-                usuario : usuarioActualizado
+                medico : usuarioActualizado
           });
 
         });
@@ -201,7 +201,7 @@
           return res.status(200).json({
             ok : true,
             message : 'Imagen subida existosamente',
-            usuario : usuarioActualizado
+            hospital : usuarioActualizado
 
           });
         });

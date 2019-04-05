@@ -27,7 +27,7 @@
 
     const payload = ticket.getPayload(); // payload datos del usuario
 
-    console.log(payload); // informacion que regresa el payload
+    // console.log(payload); // informacion que regresa el payload
 
     // retornamos el nombre, email, la imagen, y un booleano que certifique que el usuario es de google
     return {
@@ -36,7 +36,7 @@
         img : payload.picture,
         google : true
     }
-  }
+  };
 
   // ruta para logueo de user por google
   app.post('/google', async (req, res) => {
@@ -79,7 +79,8 @@
                    ok : true,
                    usuario : usuarioDB,
                    id : usuarioDB._id,
-                   token
+                   token,
+                   menu : obtenerMenu(usuarioDB.role)
                  });
           }
 
@@ -109,7 +110,8 @@
                 ok : true,
                 usuario : usuarioGuardado,
                 id : usuarioGuardado._id,
-                token
+                token,
+                menu : obtenerMenu(usuarioGuardado.role)
             });
           });
       }
@@ -154,10 +156,46 @@
           ok : true,
           usuario : usuarioExistente,
           id : usuarioExistente._id,
-          token
+          token,
+          menu : obtenerMenu(usuarioExistente.role)
       });
     });
   });
+
+
+  // funcion para devolver el menu que se mostrara en el sidebar, dependiendo de que tipo de usuario es
+  function obtenerMenu(role){
+    let menu = [{
+        titulo : 'Principal',
+        icono : 'mdi mdi-gauge',
+
+        submenu : [
+          { titulo : 'Dashboard', url : '/dashboard' },
+          { titulo : 'ProgressBar', url : '/progress' },
+          { titulo : 'Graficas', url : '/graficas1' },
+          { titulo: 'Promesas', url : '/promesas' },
+          { titulo: 'Rxjs', url : '/rxjs' }
+        ]},
+
+      {
+        titulo : 'Mantenimientos',
+        icono : 'mdi mdi-folder-lock-open',
+
+        submenu : [
+          // { titulo : 'Usuarios', url : '/usuarios' },
+          { titulo : 'Hospitales', url : '/hospitales' },
+          { titulo : 'Medicos', url : '/medicos' }
+        ]
+      }];
+
+      // si el usuario es ADMIN_ROLE agregamos al array de submenu en su posicion 2 una nueva opcion Usuarios
+      if( role === 'ADMIN_ROLE'){
+          menu[1].submenu.unshift({ titulo : 'Usuarios', url : '/usuarios' });
+      }
+
+      return menu;
+
+  };
 
 
   module.exports = app;

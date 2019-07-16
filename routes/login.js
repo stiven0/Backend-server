@@ -13,6 +13,9 @@
   // modelo usuario
   let Usuario = require('../models/usuario');
 
+  // middleware token
+  let { middlewareToken } = require('../middlewares/token');
+
   // google
   let CLIENT_ID = require('../config/config').CLIENT_ID;
   const { OAuth2Client } = require('google-auth-library');
@@ -37,6 +40,22 @@
         google : true
     }
   };
+  // ruta para renovar un token
+  app.get('/renueva-token', middlewareToken, (req, res) => {
+
+    // si pasa el middlewareToken renovamos el token
+
+    // generamos el token
+    let token = jwt.sign(
+      { usuario : req.usuario },
+      SEED, { expiresIn : '4h'} );
+
+    return res.status(200).json({
+      ok : true,
+      token
+    });
+
+  });
 
   // ruta para logueo de user por google
   app.post('/google', async (req, res) => {
@@ -73,7 +92,7 @@
 
             } else { // si el usuario se ha registrado por google anteriormente
               let token = jwt.sign(
-                { usuario : usuarioDB }, SEED, { expiresIn : '24h' });
+                { usuario : usuarioDB }, SEED, { expiresIn : '4h' });
 
                  res.status(200).json({
                    ok : true,
@@ -104,7 +123,7 @@
 
             // creamos el token
             let token = jwt.sign(
-              { usuario : usuarioGuardado }, SEED, { expiresIn : '24h' });
+              { usuario : usuarioGuardado }, SEED, { expiresIn : '4h' });
 
             res.status(201).json({
                 ok : true,
@@ -150,7 +169,7 @@
       // generamos el token
       let token = jwt.sign({
           usuario : usuarioExistente
-          }, SEED, { expiresIn : '24h'} );
+          }, SEED, { expiresIn : '4h'} );
 
       res.status(200).json({
           ok : true,

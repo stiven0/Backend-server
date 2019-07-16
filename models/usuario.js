@@ -42,7 +42,7 @@
 
     google : {
       type : Boolean,
-      defaul : false
+      default : false
     }
 
   });
